@@ -18,7 +18,6 @@ Future<void> main() async {
 
 class HayWatchApp extends StatelessWidget {
   const HayWatchApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -68,8 +67,7 @@ class FieldDashboard extends StatelessWidget {
               label: const Text('📍 Select Field on Map'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green[600],
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 textStyle: const TextStyle(fontSize: 16),
               ),
             ),
@@ -80,8 +78,7 @@ class FieldDashboard extends StatelessWidget {
               label: const Text('📋 View Tagged Fields'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.teal[600],
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 textStyle: const TextStyle(fontSize: 16),
               ),
             ),

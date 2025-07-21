@@ -11,67 +11,80 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
-  LatLng _center = const LatLng(34.1743, -97.1436); // Default: Ardmore, OK
-  final List<Map<String, dynamic>> _taggedFields = [];
+  final LatLng _center = const LatLng(34.1743, -97.1436); // Ardmore, OK
   final List<Marker> _markers = [];
 
-  // Geolocation removed for web compatibility. Map will use default center.
-
   void _saveFieldToFirestore(Map<String, dynamic> fieldData) async {
-    print('📤 Attempting to save field: $fieldData');
     try {
       await FirebaseFirestore.instance.collection('fields').add(fieldData);
-      print(
-        '✅ Field saved: ${fieldData['crop']} at ${fieldData['lat']}, ${fieldData['lng']}',
-      );
     } catch (e) {
-      print('❌ Error saving field: $e');
+      print('Error saving field: $e');
     }
   }
 
   void _onTap(TapPosition tapPosition, LatLng latLng) {
     showDialog(
       context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('Select Crop Type'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text('Lat: ${latLng.latitude}\nLng: ${latLng.longitude}'),
-            const SizedBox(height: 12),
-            DropdownButtonFormField<String>(
-              items: const [
-                DropdownMenuItem(value: 'Alfalfa', child: Text('🌿 Alfalfa')),
-                DropdownMenuItem(value: 'Bermuda', child: Text('🌱 Bermuda')),
-                DropdownMenuItem(value: 'Ryegrass', child: Text('🌾 Ryegrass')),
-                DropdownMenuItem(
-                  value: 'Sudan Grass',
-                  child: Text('🌻 Sudan Grass'),
-                ),
-                DropdownMenuItem(value: 'Other', child: Text('🌽 Other')),
-              ],
-              onChanged: (value) {
-                if (value != null) {
+      builder: (BuildContext context) {
+        String? selectedCrop;
+        return AlertDialog(
+          title: const Text('Select Crop Type'),
+          content: StatefulBuilder(
+            builder: (context, setState) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('Lat: ${latLng.latitude}\nLng: ${latLng.longitude}'),
+                  const SizedBox(height: 12),
+                  DropdownButtonFormField<String>(
+                    value: selectedCrop,
+                    items: const [
+                      DropdownMenuItem(
+                          value: 'Alfalfa', child: Text('🌿 Alfalfa')),
+                      DropdownMenuItem(
+                          value: 'Bermuda', child: Text('🌱 Bermuda')),
+                      DropdownMenuItem(
+                          value: 'Ryegrass', child: Text('🌾 Ryegrass')),
+                      DropdownMenuItem(
+                          value: 'Sudan Grass', child: Text('🌻 Sudan Grass')),
+                      DropdownMenuItem(value: 'Other', child: Text('🌽 Other')),
+                    ],
+                    onChanged: (value) {
+                      setState(() {
+                        selectedCrop = value;
+                      });
+                    },
+                    decoration: const InputDecoration(labelText: 'Crop Type'),
+                  ),
+                ],
+              );
+            },
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                if (selectedCrop != null) {
                   final fieldData = {
                     'lat': latLng.latitude,
                     'lng': latLng.longitude,
-                    'crop': value,
+                    'crop': selectedCrop,
                     'timestamp': Timestamp.now(),
                   };
-
-                  _taggedFields.add(fieldData);
                   _saveFieldToFirestore(fieldData);
-                  _addMarker(latLng, value);
-
-                  Navigator.pop(context);
-                  _showConfirmationDialog(latLng, value);
+                  _addMarker(latLng, selectedCrop!);
+                  Navigator.of(context).pop();
+                  _showConfirmationDialog(latLng, selectedCrop!);
                 }
               },
-              decoration: const InputDecoration(labelText: 'Crop Type'),
+              child: const Text('Save'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancel'),
             ),
           ],
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -80,7 +93,6 @@ class _MapScreenState extends State<MapScreen> {
       point: latLng,
       child: const Icon(Icons.location_on, color: Colors.green, size: 36),
     );
-
     setState(() {
       _markers.add(marker);
     });
@@ -89,18 +101,19 @@ class _MapScreenState extends State<MapScreen> {
   void _showConfirmationDialog(LatLng latLng, String cropType) {
     showDialog(
       context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('Field Tagged'),
-        content: Text(
-          'Lat: ${latLng.latitude}\nLng: ${latLng.longitude}\nCrop: $cropType',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('OK'),
-          ),
-        ],
-      ),
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Field Tagged'),
+          content: Text(
+              'Lat: ${latLng.latitude}\nLng: ${latLng.longitude}\nCrop: $cropType'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -131,3 +144,4 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 }
+// All code below this line is deleted to remove merge conflict remnants and duplicated code.

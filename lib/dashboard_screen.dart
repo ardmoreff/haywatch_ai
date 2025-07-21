@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
 
@@ -35,7 +34,6 @@ class DashboardScreen extends StatelessWidget {
               final moisture = data['moisture'] ?? 'N/A';
               final temp = data['temperature'] ?? 'N/A';
               final wind = data['windSpeed'] ?? 'N/A';
-
               return Card(
                 margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: ListTile(
@@ -56,3 +54,4 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 }
+// All code below this line is deleted to remove stray or corrupted code.
