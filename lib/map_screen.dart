@@ -34,19 +34,15 @@ class _MapScreenState extends State<MapScreen> {
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text('Lat: ${latLng.latitude}\nLng: ${latLng.longitude}'),
+                  Text('Lat: ${latLng.latitude.toStringAsFixed(4)}\nLng: ${latLng.longitude.toStringAsFixed(4)}'),
                   const SizedBox(height: 12),
                   DropdownButtonFormField<String>(
                     value: selectedCrop,
                     items: const [
-                      DropdownMenuItem(
-                          value: 'Alfalfa', child: Text('🌿 Alfalfa')),
-                      DropdownMenuItem(
-                          value: 'Bermuda', child: Text('🌱 Bermuda')),
-                      DropdownMenuItem(
-                          value: 'Ryegrass', child: Text('🌾 Ryegrass')),
-                      DropdownMenuItem(
-                          value: 'Sudan Grass', child: Text('🌻 Sudan Grass')),
+                      DropdownMenuItem(value: 'Alfalfa', child: Text('🌿 Alfalfa')),
+                      DropdownMenuItem(value: 'Bermuda', child: Text('🌱 Bermuda')),
+                      DropdownMenuItem(value: 'Ryegrass', child: Text('🌾 Ryegrass')),
+                      DropdownMenuItem(value: 'Sudan Grass', child: Text('🌻 Sudan Grass')),
                       DropdownMenuItem(value: 'Other', child: Text('🌽 Other')),
                     ],
                     onChanged: (value) {
@@ -65,9 +61,13 @@ class _MapScreenState extends State<MapScreen> {
               onPressed: () {
                 if (selectedCrop != null) {
                   final fieldData = {
+                    'name': 'Field ${_markers.length + 1}',
                     'lat': latLng.latitude,
                     'lng': latLng.longitude,
                     'crop': selectedCrop,
+                    'moisture': 50.0,
+                    'temperature': 75.0,
+                    'windSpeed': 5.0,
                     'timestamp': Timestamp.now(),
                   };
                   _saveFieldToFirestore(fieldData);
@@ -88,55 +88,50 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
-  void _addMarker(LatLng latLng, String cropType) {
-    final marker = Marker(
-      point: latLng,
-      child: const Icon(Icons.location_on, color: Colors.green, size: 36),
-    );
+  void _addMarker(LatLng position, String crop) {
     setState(() {
-      _markers.add(marker);
+      _markers.add(
+        Marker(
+          point: position,
+          child: const Icon(Icons.location_on, color: Colors.green, size: 32),
+        ),
+      );
     });
   }
 
-  void _showConfirmationDialog(LatLng latLng, String cropType) {
+  void _showConfirmationDialog(LatLng position, String crop) {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Field Tagged'),
-          content: Text(
-              'Lat: ${latLng.latitude}\nLng: ${latLng.longitude}\nCrop: $cropType'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
+      builder: (context) => AlertDialog(
+        title: const Text('Field Tagged!'),
+        content: Text('Crop: $crop\nLat: ${position.latitude.toStringAsFixed(4)}\nLng: ${position.longitude.toStringAsFixed(4)}'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('📍 Tap to Select Field')),
+      appBar: AppBar(
+        title: const Text('Tag a Field'),
+        backgroundColor: Colors.teal[700],
+      ),
       body: FlutterMap(
         options: MapOptions(
-          center: _center,
-          zoom: 15,
-          maxZoom: 18,
-          minZoom: 3,
-          interactiveFlags: InteractiveFlag.pinchZoom |
-              InteractiveFlag.drag |
-              InteractiveFlag.doubleTapZoom,
+          initialCenter: _center,
+          initialZoom: 13.0,
           onTap: _onTap,
         ),
         children: [
           TileLayer(
-            urlTemplate:
-                'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-            userAgentPackageName: 'com.example.haywatch_ai',
+            urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+            subdomains: const ['a', 'b', 'c'],
           ),
           MarkerLayer(markers: _markers),
         ],
@@ -144,4 +139,3 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 }
-// All code below this line is deleted to remove merge conflict remnants and duplicated code.
