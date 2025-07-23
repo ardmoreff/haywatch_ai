@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 class FieldPlannerScreen extends StatelessWidget {
   const FieldPlannerScreen({super.key});
@@ -8,43 +8,20 @@ class FieldPlannerScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Field Planner'),
-        backgroundColor: Colors.teal[700],
+        backgroundColor: Colors.green[600],
+        foregroundColor: Colors.white,
       ),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.agriculture,
-              size: 64,
-              color: Colors.teal,
+      body: const Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Center(
+          child: Text(
+            'Field Planning Tools\nComing Soon!',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
             ),
-            SizedBox(height: 16),
-            Text(
-              'Field Planner',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 8),
-            Text(
-              'Plan your field activities and track drying progress',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey,
-              ),
-            ),
-            SizedBox(height: 24),
-            Text(
-              'Coming soon...',
-              style: TextStyle(
-                fontSize: 18,
-                fontStyle: FontStyle.italic,
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
