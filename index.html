@@ -44,22 +44,18 @@
 <body>
   <div class="loading" id="loading">
     <div class="spinner"></div>
-    <h2>HayWatch AI - Agricultural Intelligence</h2>
-    <p id="status">Loading application...</p>
+    <h2>HayWatch AI - FIXED VERSION</h2>
+    <p id="status">Loading clean deployment...</p>
   </div>
   <script>
-    console.log('HayWatch AI: Starting fresh deployment');
+    console.log('HayWatch AI: NUCLEAR DEPLOYMENT - NO CONFLICT MARKERS');
     
     setTimeout(() => {
-      document.getElementById('status').textContent = 'Loading Flutter framework...';
+      document.getElementById('status').textContent = 'Flutter framework loading...';
     }, 1000);
     
-    setTimeout(() => {
-      document.getElementById('status').textContent = 'Initializing weather system...';
-    }, 3000);
-    
     window.addEventListener('flutter-first-frame', () => {
-      console.log('HayWatch AI: Application loaded successfully');
+      console.log('HayWatch AI: SUCCESS - Clean deployment loaded');
       document.getElementById('loading').style.display = 'none';
     });
   </script>
